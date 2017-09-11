@@ -44,7 +44,9 @@ void draw(void) {
 
 void u8g_main(){
   
-  u8g.setFont(u8g_font_fur17);
+  //u8g.setFont(u8g_font_fur17);
+  u8g.setFont(u8g_font_9x15);
+ 
   DateTime now = RTC.now();
   String hour = String(now.hour());
   if(now.hour()<10){
