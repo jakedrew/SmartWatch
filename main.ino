@@ -10,6 +10,12 @@ int screen = 0;
 U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE); // I2C / TWI 
 int x = 0;
 
+void fontsetup(){
+ if() 
+ 
+}
+
+
 void setup() {
   Serial.begin(9600);
   Wire.begin();
@@ -43,8 +49,6 @@ void draw(void) {
 }
 
 void u8g_main(){
-  
-  //u8g.setFont(u8g_font_fur17);
   u8g.setFont(u8g_font_9x15);
  
   DateTime now = RTC.now();
@@ -67,29 +71,13 @@ void u8g_main(){
   u8g.drawStr( 95, 38, secs.c_str());
 }
 
-void u8g_boot(){
-  u8g_prepare();
-  u8g.drawStr( 10, 10, "Boot");
-  u8g.drawBox(14,40,x*2,10);
-}
+// void u8g_boot(){
+//   u8g_prepare();
+//   u8g.drawStr( 10, 10, "Boot");
+//   u8g.drawBox(14,40,x*2,10);
+// }
 
 void loop () {
-    // DateTime now = RTC.now(); 
-    // Serial.print(now.year(), DEC);
-    // Serial.print('/');
-    // Serial.print(now.month(), DEC);
-    // Serial.print('/');
-    // Serial.print(now.day(), DEC);
-    // Serial.print(' ');
-    // Serial.print(now.hour(), DEC);
-    // Serial.print(':');
-    // Serial.print(now.minute(), DEC);
-    // Serial.print(':');
-    // Serial.print(now.second(), DEC);
-    // Serial.println(); 
-    //delay(1000);
-   //heart();
-      // picture loop  
     u8g.firstPage();  
     do {
       draw();
