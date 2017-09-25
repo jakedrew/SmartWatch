@@ -1,7 +1,11 @@
- //Libraries
+//Libraries
 #include <Wire.h>
 #include "RTClib.h"
 #include "U8glib.h"
+#include <ESP8266WiFi.h>
+#include <WiFiClient.h>
+#include <ESP8266WebServer.h>
+
 
 //Define Globals
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -9,10 +13,22 @@ RTC_DS1307 RTC;
 int screen = 0;
 U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE); // I2C / TWI 
 int x = 0;
+const char *ssid = "SmartWatch D1";
+const char *password = "password";
+
+const char* host_ip = "ip-api.com";
+String path_ip = "/csv/";
+const char* host_ow = "http://api.openweathermap.org/";
+String path_ow = "/data/2.5/weather?"; 
+String lat = "";
+String lon = "";
+const char* appid = "6c16b76ddb36409196d096ccfd7574bd";
+
+//http://api.openweathermap.org/data/2.5/weather?lat=51.6667&lon=-1.2833&appid=6c16b76ddb36409196d096ccfd7574bd
+
 
 void fontsetup(){
- if() 
- 
+
 }
 
 
@@ -37,8 +53,9 @@ void u8g_prepare(void) {
 void draw(void) {
   u8g_prepare();
   switch(screen) {
-    case 0: u8g_boot(); break;
+   // case 0: u8g_boot(); break;
     case 1: u8g_main(); break;
+    case 2: u8g_wifi(); break;
     // case 2: u8g_time(); break;
     // case 3: u8g_heart(); break;
     // case 4: u8g_temperature(); break;
@@ -69,6 +86,72 @@ void u8g_main(){
   u8g.drawStr( 75, 62, btmstr.c_str());
   String secs = String(now.second());
   u8g.drawStr( 95, 38, secs.c_str());
+}
+
+void retrieve_ip(){
+	
+}
+
+void u8g_wifi(){
+  u8g.setFont(u8g_font_9x15);
+  u8g_prepare();
+  u8g.drawStr( 10, 10, "WiFi");
+  
+	
+	WiFiClient client;
+  const int httpPort = 80;
+  if (!client.connect(host, httpPort)) {
+    Serial.println("connection failed");
+    return;
+  }
+  
+  String url = "/csv/";
+  
+  Serial.print("Requesting URL: ");
+  Serial.println(url);
+  
+  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+               "Host: " + host + "\r\n" + 
+               "Connection: close\r\n\r\n");
+  delay(10);
+  
+  while(client.available()){
+    String output;
+    String line = client.readStringUntil('\r');
+
+    const int numberOfPieces = 14;
+    String pieces[numberOfPieces];
+    String input = line;
+    
+    int counter = 0;  
+    int lastIndex = 0;
+    
+      for (int i = 0; i < input.length(); i++) {
+        if (input.substring(i, i+1) == ",") {
+          pieces[counter] = input.substring(lastIndex, i);
+          lastIndex = i + 1;
+          counter++;
+        }
+
+        if (i == input.length() - 1) {
+          pieces[counter] = input.substring(lastIndex, i);
+        }
+      }
+
+      input = "";
+      counter = 0;
+      lastIndex = 0;
+
+    Serial.print("Location:");
+    Serial.println(pieces[5]);
+    
+    Serial.print("IP ADDR:");
+    Serial.println(pieces[13]);
+  }
+
+	
+	
+	
 }
 
 // void u8g_boot(){
