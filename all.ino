@@ -1,11 +1,3 @@
-/*
- *  This sketch sends data via HTTP GET requests to data.sparkfun.com service.
- *
- *  You need to get streamId and privateKey at data.sparkfun.com and paste them
- *  below. Or just customize this script to talk to other HTTP servers.
- *
- */
-
 #include <ESP8266WiFi.h>
 
 const char* ssid     = "";
@@ -16,8 +8,6 @@ const char* host = "ip-api.com";
 void setup() {
   Serial.begin(115200);
   delay(10);
-
-  // We start by connecting to a WiFi network
 
   Serial.println();
   Serial.println();
@@ -46,7 +36,6 @@ void loop() {
   Serial.print("connecting to ");
   Serial.println(host);
   
-  // Use WiFiClient class to create TCP connections
   WiFiClient client;
   const int httpPort = 80;
   if (!client.connect(host, httpPort)) {
@@ -54,38 +43,28 @@ void loop() {
     return;
   }
   
-  // We now create a URI for the request
   String url = "/csv/";
   
   Serial.print("Requesting URL: ");
   Serial.println(url);
   
-  // This will send the request to the server
   client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                "Host: " + host + "\r\n" + 
                "Connection: close\r\n\r\n");
   delay(10);
   
-  // Read all the lines of the reply from server and print them to Serial
   while(client.available()){
     String output;
     String line = client.readStringUntil('\r');
 
 
     
-    // Define number of pieces
     const int numberOfPieces = 14;
     String pieces[numberOfPieces];
-    
-    // This will be the buffered string from Serial.read()
-    // up until you hit a \n
-    // Should look something like "123,456,789,0"
     String input = line;
     
-    // Keep track of current position in array
     int counter = 0;
     
-    // Keep track of the last comma so we know where to start the substring
     int lastIndex = 0;
     
 
@@ -94,25 +73,18 @@ void loop() {
    
 
       for (int i = 0; i < input.length(); i++) {
-        // Loop through each character and check if it's a comma
         if (input.substring(i, i+1) == ",") {
-          // Grab the piece from the last index up to the current position and store it
           pieces[counter] = input.substring(lastIndex, i);
-          // Update the last position and add 1, so it starts from the next character
           lastIndex = i + 1;
-          // Increase the position in the array that we store into
           counter++;
         }
 
-        // If we're at the end of the string (no more commas to stop us)
         if (i == input.length() - 1) {
-          // Grab the last part of the string from the lastIndex to the end
           pieces[counter] = input.substring(lastIndex, i);
         }
       }
       
 
-      // Clear out string and counters to get ready for the next incoming string
       input = "";
       counter = 0;
       lastIndex = 0;
@@ -126,7 +98,6 @@ void loop() {
     
     Serial.print("IP ADDR:");
     Serial.println(pieces[13]);
-   // Serial.print(line);
   }
   
   Serial.println();
@@ -141,25 +112,20 @@ void loop() {
 
 
 
-//Including the two libraries
 //#include <UniversalTelegramBot.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
-//------- WiFi Settings -------
-char ssid[] = "";       // your network SSID (name)
+char ssid[] = "";       
 char pass[] = "";  
 #define TELEGRAM_BUTTON_PIN D5
 
 
 
-// ------- Telegram config --------
-#define BOT_TOKEN "351635946:AAHr7qGistKdQ1fIKb-a2MwLxDyDDKgG9ig"  // your Bot Token (Get from Botfather)
-//#define CHAT_ID "413136155" // Chat ID of where you want the message to go (You can use MyIdBot to get the chat ID)
-#define CHAT_ID "-168977312" // Chat ID of where you want the message to go (You can use MyIdBot to get the chat ID)
+#define BOT_TOKEN "351635946:AAHr7qGistKdQ1fIKb-a2MwLxDyDDKgG9ig"
+#define CHAT_ID "-168977312" 
 
 
-// SSL client needed for both libraries
 WiFiClientSecure client;
 
 //UniversalTelegramBot bot(BOT_TOKEN, client);
@@ -172,17 +138,11 @@ void setup() {
 
   Serial.begin(115200);
 
-  // Initlaze the buttons
   pinMode(TELEGRAM_BUTTON_PIN, INPUT);
 
-  // NOTE:
-  // It is important to use interupts when making network calls in your sketch
-  // if you just checked the status of te button in the loop you might
-  // miss the button press.
+
 //  attachInterrupt(TELEGRAM_BUTTON_PIN, telegramButtonPressed, CHANGE);
 
-  // Set WiFi to station mode and disconnect from an AP if it was Previously
-  // connected
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   delay(100);
@@ -196,7 +156,6 @@ void setup() {
     Serial.println(" networks found");
     for (int i = 0; i < n; ++i)
     {
-      // Print SSID and RSSI for each network found
       Serial.print(i + 1);
       Serial.print(": ");
       Serial.print(WiFi.SSID(i));
@@ -209,9 +168,7 @@ void setup() {
   }
   Serial.println("");
 
-  // Wait a bit before scanning again
   delay(1000);
-  // Attempt to connect to Wifi network:
   Serial.print("Connecting Wifi: ");
   Serial.println(ssid);
   WiFi.begin(ssid, pass);
@@ -233,7 +190,7 @@ IPAddress ip;
 IPAddress gateway;
 
 void loop() {
-  http://ip-api.com/json
+  //http://ip-api.com/json
   
   ip = WiFi.localIP();
   Serial.print("LocalIP: ");
@@ -326,22 +283,17 @@ server.handleClient();
 #include <SPI.h>  
 #include <TelegramBot.h>  
  
-// Initialize Wifi connection to the router  
-//char ssid[] = "JSE";       // your network SSID (name)
-//char pass[] = "jakedrew";  // your network key
-char ssid[] = "Homeworking2_EXT";       // your network SSID (name)
-char pass[] = "Worldcup66";  // your network key
-// Initialize Telegram BOT  
-const char* BotToken = "351635946:AAHr7qGistKdQ1fIKb-a2MwLxDyDDKgG9ig";    // your Bot Teken  
+char ssid[] = "";       
+char pass[] = "";
+const char* BotToken = "351635946:AAHr7qGistKdQ1fIKb-a2MwLxDyDDKgG9ig";    
 WiFiClientSecure client;
 TelegramBot bot(BotToken,client);  
-const int ledPin = D4;  // the number of the LED pin  
+const int ledPin = D4;  
 void setup() 
 {  
  Serial.begin(115200);  
- while (!Serial) {}  //Start running when the serial is open 
+ while (!Serial) {}  
  delay(3000);  
- // attempt to connect to Wifi network:  
  Serial.print("Connecting Wifi: ");  
  Serial.println(ssid);  
  while (WiFi.status() != WL_CONNECTED) 
@@ -361,13 +313,12 @@ void loop()
        {  
    digitalWrite(ledPin, HIGH);  
    Serial.println("message received");  
-   bot.sendMessage(m.chat_id, "The Led is now ON");  
  }  
  else if (m.text.equals("Off")) 
        {  
    digitalWrite(ledPin, LOW);  
    Serial.println("message received");  
-   bot.sendMessage(m.chat_id, "The Led is now OFF");  
+   bot.sendMessage(m.chat_id, "low");  
  }  
 }  
 
@@ -376,17 +327,11 @@ void loop()
 
 
 
-/*
- *  This sketch demonstrates how to scan WiFi networks. 
- *  The API is almost the same as with the WiFi Shield library, 
- *  the most obvious difference being the different file you need to include:
- */
 #include "ESP8266WiFi.h"
 
 void setup() {
   Serial.begin(115200);
 
-  // Set WiFi to station mode and disconnect from an AP if it was previously connected
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   delay(100);
@@ -398,7 +343,6 @@ String signal="";
 void loop() {
   Serial.println("scan start");
 
-  // WiFi.scanNetworks will return the number of networks found
   int n = WiFi.scanNetworks();
   Serial.println("scan done");
   if (n == 0)
@@ -409,7 +353,6 @@ void loop() {
     Serial.println(" networks found");
     for (int i = 0; i < n; ++i)
     {
-      // Print SSID and RSSI for each network found
       Serial.print(i + 1);
       Serial.print(": ");
       Serial.print(WiFi.SSID(i));
@@ -431,7 +374,6 @@ void loop() {
   }
   Serial.println("");
 
-  // Wait a bit before scanning again
   delay(5000);
 }
 
@@ -444,21 +386,18 @@ void loop() {
 #include <SPI.h>
 #include <WiFi.h>
 
-char ssid[] ="";     //  your network SSID (name)
-char pass[] ="";  // your network password
-int status = WL_IDLE_STATUS;     // the Wifi radio's status
+char ssid[] ="";  
+char pass[] =""; 
+int status = WL_IDLE_STATUS;    
 
 void setup() {
-  //Initialize serial and wait for port to open:
   Serial.begin(9600);
   while (!Serial) {
-    ; // wait for serial port to connect. Needed for Leonardo only
+    
   }
 
-  // check for the presence of the shield:
   if (WiFi.status() == WL_NO_SHIELD) {
     Serial.println("WiFi shield not present");
-    // don't continue:
     while (true);
   }
 
@@ -466,18 +405,14 @@ void setup() {
   if ( fv != "1.1.0" )
     Serial.println("Please upgrade the firmware");
 
-  // attempt to connect to Wifi network:
   while ( status != WL_CONNECTED) {
     Serial.print("Attempting to connect to WPA SSID: ");
     Serial.println(ssid);
-    // Connect to WPA/WPA2 network:
     status = WiFi.begin(ssid, pass);
 
-    // wait 10 seconds for connection:
     delay(10000);
   }
 
-  // you're connected now, so print out the data:
   Serial.print("You're connected to the network");
   printCurrentNet();
   printWifiData();
@@ -485,19 +420,16 @@ void setup() {
 }
 
 void loop() {
-  // check the network connection once every 10 seconds:
   delay(10000);
   printCurrentNet();
 }
 
 void printWifiData() {
-  // print your WiFi shield's IP address:
   IPAddress ip = WiFi.localIP();
   Serial.print("IP Address: ");
   Serial.println(ip);
   Serial.println(ip);
 
-  // print your MAC address:
   byte mac[6];
   WiFi.macAddress(mac);
   Serial.print("MAC address: ");
@@ -516,11 +448,9 @@ void printWifiData() {
 }
 
 void printCurrentNet() {
-  // print the SSID of the network you're attached to:
   Serial.print("SSID: ");
   Serial.println(WiFi.SSID());
 
-  // print the MAC address of the router you're attached to:
   byte bssid[6];
   WiFi.BSSID(bssid);
   Serial.print("BSSID: ");
@@ -536,12 +466,10 @@ void printCurrentNet() {
   Serial.print(":");
   Serial.println(bssid[0], HEX);
 
-  // print the received signal strength:
   long rssi = WiFi.RSSI();
   Serial.print("signal strength (RSSI):");
   Serial.println(rssi);
 
-  // print the encryption type:
   byte encryption = WiFi.encryptionType();
   Serial.print("Encryption Type:");
   Serial.println(encryption, HEX);
@@ -551,26 +479,21 @@ void printCurrentNet() {
 /////next
 
 
-//Including the two libraries
 #include <UniversalTelegramBot.h>
 
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
 
-//------- WiFi Settings -------
-char ssid[] = "";       // your network SSID (name)
+char ssid[] = "";     
 char pass[] = "";  
 #define TELEGRAM_BUTTON_PIN D5
 
 
 
-// ------- Telegram config --------
-#define BOT_TOKEN "351635946:AAHr7qGistKdQ1fIKb-a2MwLxDyDDKgG9ig"  // your Bot Token (Get from Botfather)
-//#define CHAT_ID "413136155" // Chat ID of where you want the message to go (You can use MyIdBot to get the chat ID)
-#define CHAT_ID "-168977312" // Chat ID of where you want the message to go (You can use MyIdBot to get the chat ID)
+#define BOT_TOKEN "351635946:AAHr7qGistKdQ1fIKb-a2MwLxDyDDKgG9ig"  
+#define CHAT_ID "-168977312" 
 
 
-// SSL client needed for both libraries
 WiFiClientSecure client;
 
 UniversalTelegramBot bot(BOT_TOKEN, client);
@@ -583,17 +506,8 @@ void setup() {
 
   Serial.begin(115200);
 
-  // Initlaze the buttons
   pinMode(TELEGRAM_BUTTON_PIN, INPUT);
 
-  // NOTE:
-  // It is important to use interupts when making network calls in your sketch
-  // if you just checked the status of te button in the loop you might
-  // miss the button press.
-//  attachInterrupt(TELEGRAM_BUTTON_PIN, telegramButtonPressed, CHANGE);
-
-  // Set WiFi to station mode and disconnect from an AP if it was Previously
-  // connected
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   delay(100);
@@ -607,7 +521,6 @@ void setup() {
     Serial.println(" networks found");
     for (int i = 0; i < n; ++i)
     {
-      // Print SSID and RSSI for each network found
       Serial.print(i + 1);
       Serial.print(": ");
       Serial.print(WiFi.SSID(i));
@@ -620,9 +533,7 @@ void setup() {
   }
   Serial.println("");
 
-  // Wait a bit before scanning again
   delay(1000);
-  // Attempt to connect to Wifi network:
   Serial.print("Connecting Wifi: ");
   Serial.println(ssid);
   WiFi.begin(ssid, pass);
