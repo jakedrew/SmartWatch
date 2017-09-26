@@ -88,69 +88,53 @@ void u8g_main(){
   u8g.drawStr( 95, 38, secs.c_str());
 }
 
-void retrieve_ip(){
+
+
+void retrieve_api(){
+	WiFiClient client;
+  const int httpPort = 80;
+  if (!client.connect(host, httpPort)) {
+    Serial.println("connection failed");return;
+  }
 	
+  client.print(String("GET ") + path_ip + " HTTP/1.1\r\n" +
+               "Host: " + host + "\r\n" + 
+               "Connection: close\r\n\r\n");
+	
+  while(client.available()){
+    String output;
+    String line, input = client.readStringUntil('\r');
+
+    const int n = 14;
+    String api[n];
+    
+    int c = 0;  
+    int li = 0;
+    
+      for (int i = 0; i < input.length(); i++) {
+        if (input.substring(i, i+1) == ",") {
+          api[c] = input.substring(li, i);
+          li = i + 1;
+          c++;
+        }
+        if (i == input.length() - 1) {
+          api[c] = input.substring(li, i);
+        }
+      }
+		
+      input = "";
+      c, li = 0;
+		return api; //7,8 index is latlon, 13 is ip, 5 is location (town/city)
+  }
 }
 
 void u8g_wifi(){
   u8g.setFont(u8g_font_9x15);
   u8g_prepare();
   u8g.drawStr( 10, 10, "WiFi");
-  
-	
-	WiFiClient client;
-  const int httpPort = 80;
-  if (!client.connect(host, httpPort)) {
-    Serial.println("connection failed");
-    return;
-  }
-  
-  String url = "/csv/";
-  
-  Serial.print("Requesting URL: ");
-  Serial.println(url);
-  
-  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-               "Host: " + host + "\r\n" + 
-               "Connection: close\r\n\r\n");
-  delay(10);
-  
-  while(client.available()){
-    String output;
-    String line = client.readStringUntil('\r');
-
-    const int numberOfPieces = 14;
-    String pieces[numberOfPieces];
-    String input = line;
-    
-    int counter = 0;  
-    int lastIndex = 0;
-    
-      for (int i = 0; i < input.length(); i++) {
-        if (input.substring(i, i+1) == ",") {
-          pieces[counter] = input.substring(lastIndex, i);
-          lastIndex = i + 1;
-          counter++;
-        }
-
-        if (i == input.length() - 1) {
-          pieces[counter] = input.substring(lastIndex, i);
-        }
-      }
-
-      input = "";
-      counter = 0;
-      lastIndex = 0;
-
-    Serial.print("Location:");
-    Serial.println(pieces[5]);
-    
-    Serial.print("IP ADDR:");
-    Serial.println(pieces[13]);
-  }
-
-	
-	
+	String api = retrieve_api();
+	String localIP = WiFi.localIP().
+	u8g.drawStr( 20, 20, localIP);
 	
 }
 
