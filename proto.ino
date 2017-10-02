@@ -44,8 +44,6 @@ String message = "File Not Found\n\n";
 }
 
 
-#define DEMO_DURATION 3000
-typedef void (*Demo)(void);
 
 int demoMode = 0;
 int counter = 1;
@@ -90,26 +88,24 @@ void drawImageDemo() {
         display.setFont(ArialMT_Plain_10);
 
          display.setTextAlignment(TEXT_ALIGN_CENTER);
-        display.drawString(64, 22, "/wifi openedi");
+        display.drawString(64, 22, "/wifi opened");
     }else{
-      display.drawXbm(34, 14, WiFi_Logo_width, WiFi_Logo_height, WiFi_Logo_bits);
+      //display.drawXbm(34, 14, WiFi_lw, WiFi_lh, WiFi_lb);
+      display.drawXbm(34, 14, WiFi_iw, WiFi_ih, WiFi_ib);
     }
 }
 
-Demo demos[] = {drawImageDemo};
-int demoLength = (sizeof(demos) / sizeof(Demo));
+
 long timeSinceLastModeSwitch = 0;
 
 void loop() {
   display.clear();
-  demos[demoMode]();
 
   display.setTextAlignment(TEXT_ALIGN_RIGHT);
   display.drawString(10, 128, String(millis()));
   display.display();
 
-  if (millis() - timeSinceLastModeSwitch > DEMO_DURATION) {
-    demoMode = (demoMode + 1)  % demoLength;
+  if (millis() - timeSinceLastModeSwitch > 1000) {
     timeSinceLastModeSwitch = millis();
   }
   counter++;
