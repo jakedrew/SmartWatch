@@ -1,17 +1,13 @@
-#include <Wire.h>  
-#include "SSD1306.h" /
-#include "SH1106.h" 
+#include <Wire.h>
+#include "SSD1306.h"
+#include "SH1106.h"
 #include "images.h"
-
+#include <ESP8266WiFi.h>
+#include <WiFiClient.h>
+#include <ESP8266WebServer.h>
 
 int button = 0;
 SH1106 display(0x3c, D1, D2);
-
-#include <ESP8266WiFi.h>
-
-#include <WiFiClient.h>
-
-#include <ESP8266WebServer.h>
 
 const char *ssid = "SmartWatch D1";
 
@@ -21,12 +17,11 @@ ESP8266WebServer server(80);
 
 void handleRoot() {
 
-server.send(200, "text/html", "<h1>You are connected</h1>");
+  server.send(200, "text/html", "<h1>You are connected</h1>");
 
 }
 void handleWifi() {
-
-String message = "File Not Found\n\n";
+  String message = "";
   message += "URI: ";
   message += server.uri();
   message += "\nMethod: ";
@@ -40,7 +35,7 @@ String message = "File Not Found\n\n";
   }
 
   server.send ( 200, "text/plain", message );
-  button =1;
+  button = 1;
 }
 
 
@@ -49,40 +44,24 @@ int demoMode = 0;
 int counter = 1;
 void setup() {
   Serial.begin(115200);
-  Serial.println();
-  Serial.println();
-
-
   display.init();
-
   display.flipScreenVertically();
   display.setFont(ArialMT_Plain_10);
-  Serial.println();
 
-  Serial.print("Configuring access point...");
-  
   WiFi.softAP(ssid, password);
-  
   IPAddress myIP = WiFi.softAPIP();
   
   Serial.print("AP IP address: ");
-  
   Serial.println(myIP);
   
   server.on("/", handleRoot);
   server.on("/wifi", handleWifi);
   
   server.begin();
-  
-  Serial.println("HTTP server started");
 }
 
 
-
-
-
-
-void drawImageDemo() {
+void drawImage() {
     
     if(button == 1){
         display.setFont(ArialMT_Plain_10);
