@@ -4,11 +4,11 @@
 #include "U8glib.h"
 
 
-//Define Globals
+//Define Global Variables
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 RTC_DS1307 RTC;
 int screen = 0;
-U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE); // I2C / TWI 
+U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE);
 int x = 0;
 
 void setup() {
