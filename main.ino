@@ -2,9 +2,6 @@
 #include <Wire.h>
 #include "RTClib.h"
 #include "U8glib.h"
-#include <ESP8266WiFi.h>
-#include <WiFiClient.h>
-#include <ESP8266WebServer.h>
 
 
 //Define Globals
@@ -13,24 +10,6 @@ RTC_DS1307 RTC;
 int screen = 0;
 U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE); // I2C / TWI 
 int x = 0;
-const char *ssid = "SmartWatch D1";
-const char *password = "password";
-
-const char* host_ip = "ip-api.com";
-String path_ip = "/csv/";
-const char* host_ow = "http://api.openweathermap.org/";
-String path_ow = "/data/2.5/weather?"; 
-String lat = "";
-String lon = "";
-const char* appid = "6c16b76ddb36409196d096ccfd7574bd";
-
-//http://api.openweathermap.org/data/2.5/weather?lat=51.6667&lon=-1.2833&appid=6c16b76ddb36409196d096ccfd7574bd
-
-
-void fontsetup(){
-
-}
-
 
 void setup() {
   Serial.begin(9600);
