@@ -34,7 +34,7 @@ void draw(void) {
   switch(screen) {
    // case 0: u8g_boot(); break;
     case 1: u8g_main(); break;
-    case 2: u8g_wifi(); break;
+    //case 2: u8g_wifi(); break;
     // case 2: u8g_time(); break;
     // case 3: u8g_heart(); break;
     // case 4: u8g_temperature(); break;
@@ -69,53 +69,7 @@ void u8g_main(){
 
 
 
-void retrieve_api(){
-	WiFiClient client;
-  const int httpPort = 80;
-  if (!client.connect(host, httpPort)) {
-    Serial.println("connection failed");return;
-  }
-	
-  client.print(String("GET ") + path_ip + " HTTP/1.1\r\n" +
-               "Host: " + host + "\r\n" + 
-               "Connection: close\r\n\r\n");
-	
-  while(client.available()){
-    String output;
-    String line, input = client.readStringUntil('\r');
 
-    const int n = 14;
-    String api[n];
-    
-    int c = 0;  
-    int li = 0;
-    
-      for (int i = 0; i < input.length(); i++) {
-        if (input.substring(i, i+1) == ",") {
-          api[c] = input.substring(li, i);
-          li = i + 1;
-          c++;
-        }
-        if (i == input.length() - 1) {
-          api[c] = input.substring(li, i);
-        }
-      }
-		
-      input = "";
-      c, li = 0;
-		return api; //7,8 index is latlon, 13 is ip, 5 is location (town/city)
-  }
-}
-
-void u8g_wifi(){
-  u8g.setFont(u8g_font_9x15);
-  u8g_prepare();
-  u8g.drawStr( 10, 10, "WiFi");
-	String api = retrieve_api();
-	String localIP = WiFi.localIP().
-	u8g.drawStr( 20, 20, localIP);
-	
-}
 
 // void u8g_boot(){
 //   u8g_prepare();
