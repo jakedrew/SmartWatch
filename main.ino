@@ -10,14 +10,14 @@ U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE);
 Adafruit_MCP9808 tSensor = Adafruit_MCP9808();
 Adafruit_DRV2605 drv;
 
+int16_t aX,aY,aZ,T,gX,gY,gZ;
 String data;
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 int a, s, x = 0;
 
 void setup()
 {
-    Serial.begin(9600);                                 
-    //Sets the baud for serial data transmission    
+    Serial.begin(9600);                             
     
     Wire.begin();
     RTC.begin();
@@ -124,8 +124,7 @@ void uMain(){
 
 // void uBLE(){
 //   u8g_prepare();
-//   u8g.drawStr( 10, 10, "Boot");
-//   u8g.drawBox(14,40,x*2,10);
+//   u8g.drawStr( 10, 10, "BLE");
 // }
     
 void uTemp(){
@@ -141,19 +140,38 @@ void uTemp(){
   digitalWrite(D4, LOW);
 }
     
-// void uGyro(){
-//   u8g_prepare();
-//   u8g.drawStr( 10, 10, "Boot");
-//   u8g.drawBox(14,40,x*2,10);
-// }
+void uGyro(){
+  u8g_prepare();
+  Wire.beginTransmission(0x68);
+  Wire.write(0x6B);  
+  Wire.write(0);     
+  Wire.endTransmission(true);
+
+  Wire.beginTransmission(0x68);
+  Wire.write(0x3B);
+  Wire.endTransmission(false);
+  Wire.requestFrom(0x68,14,true); 
+  aX=Wire.read()<<8|Wire.read();    
+  aY=Wire.read()<<8|Wire.read(); 
+  aZ=Wire.read()<<8|Wire.read();  
+  T=Wire.read()<<8|Wire.read();  
+  gX=Wire.read()<<8|Wire.read(); 
+  gY=Wire.read()<<8|Wire.read(); 
+  gZ=Wire.read()<<8|Wire.read();  
+    
+  Wire.beginTransmission(0x68);
+  Wire.write(0x6B);  
+  Wire.write(1);     
+  Wire.endTransmission(true);
+}
 
 void notify(){
   drv.setMode(DRV2605_MODE_INTTRIG); // default, internal trigger when sending GO command
 
   drv.selectLibrary(1);
-  drv.setWaveform(0, 84);  // ramp up medium 1, see datasheet part 11.2
-  drv.setWaveform(1, 1);  // strong click 100%, see datasheet part 11.2
-  drv.setWaveform(2, 0);  // end of waveforms    
+  drv.setWaveform(0, 84);  
+  drv.setWaveform(1, 1);  //100%
+  drv.setWaveform(2, 0);   
   
   drv.go();
 }
