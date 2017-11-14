@@ -2,10 +2,13 @@
 #include "RTClib.h"
 #include "U8glib.h"
 #include "Adafruit_MCP9808.h"
+#include "Adafruit_DRV2605.h"
+
 
 RTC_DS1307 RTC;
 U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE);
 Adafruit_MCP9808 tSensor = Adafruit_MCP9808();
+Adafruit_DRV2605 drv;
 
 String data;
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -20,7 +23,8 @@ void setup()
     RTC.begin();
     RTC.adjust(DateTime(F(__DATE__), F(__TIME__)));
     DateTime now = RTC.now();
-
+    drv.begin();
+    
     for(a=0;a<13;) pinMode(a++,OUTPUT);             
     //sets all pins to output
     
@@ -143,5 +147,13 @@ void uTemp(){
 //   u8g.drawBox(14,40,x*2,10);
 // }
 
+void notify(){
+  drv.setMode(DRV2605_MODE_INTTRIG); // default, internal trigger when sending GO command
 
-
+  drv.selectLibrary(1);
+  drv.setWaveform(0, 84);  // ramp up medium 1, see datasheet part 11.2
+  drv.setWaveform(1, 1);  // strong click 100%, see datasheet part 11.2
+  drv.setWaveform(2, 0);  // end of waveforms    
+  
+  drv.go();
+}
