@@ -1,0 +1,10 @@
+;Layer: Drill PTH
+;EasyEDA v6.4.7, 2020-10-05T14:23:05+01:00
+;2c2162e3dd23406bb5aba25b7724e7bd,81cdacc9909441f8a3d49748f20dc12b,10
+;Gerber Generator version 0.2
+M48
+METRIC,LZ,000.000
+%
+G05
+G90
+M30
