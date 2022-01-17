@@ -1,0 +1,27 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L 2022-01-17_19-57-37:RP2040 U?
+U 1 1 61E5D3B8
+P 3250 2850
+F 0 "U?" H 4450 3237 60  0000 C CNN
+F 1 "RP2040" H 4450 3131 60  0000 C CNN
+F 2 "IC57_RP2040" H 4450 3090 60  0001 C CNN
+F 3 "" H 3250 2850 60  0000 C CNN
+	1    3250 2850
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
